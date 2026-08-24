@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MangaCouy - Full Featured</title>
+  <style>
+    :root {
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --accent: #ff4757;
+      --accent-hover: #ff6b81;
+      --text: #ffffff;
+      --text-dim: #aaa;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: var(--card-bg);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #333;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--accent);
+      cursor: pointer;
+    }
+
+    .user-profile-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar-small {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #333;
+    }
+
+    .btn-auth {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+
+    .btn-auth:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--text-dim);
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .btn-danger:hover {
+      background: #c0392b;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+
+    h2 {
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 8px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .auth-box {
+      max-width: 400px;
+      margin: 40px auto;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+
+    .auth-tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      color: var(--text-dim);
+    }
+
+    .auth-tab.active {
+      border-bottom-color: var(--accent);
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: var(--text-dim);
+    }
+
+    input[type="text"], input[type="email"], input[type="password"], input[type="file"], textarea {
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+      border-radius: 4px;
+      border: 1px solid #333;
+      background: #2a2a2a;
+      color: #fff;
+    }
+
+    .editor-section {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .pages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+      min-height: 100px;
+      padding: 10px;
+      border: 2px dashed #444;
+      border-radius: 6px;
+    }
+
+    .page-card {
+      background: #2a2a2a;
+      border-radius: 6px;
+      padding: 8px;
+      cursor: grab;
+      position: relative;
+      text-align: center;
+    }
+
+    .page-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .btn-delete {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 71, 87, 0.9);
+      border: none;
+      color: white;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+    }
+
+    .manga-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .manga-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .manga-card img.cover {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+    }
+
+    .manga-card .info {
+      padding: 12px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .manga-card h3 {
+      margin: 0 0 5px 0;
+      font-size: 16px;
+    }
+
+    .manga-card p {
+      margin: 0 0 10px 0;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .card-footer-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .btn-like {
+      background: #2a2a2a;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-like.liked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .reader-container {
+      text-align: center;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+
+    .reader-img {
+      max-width: 100%;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+
+    /* Modal Styling */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    /* Comments Styling */
+    .comments-section {
+      margin-top: 40px;
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 8px;
+      text-align: left;
+    }
+
+    .comment-item {
+      display: flex;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #333;
+    }
+
+    .comment-item:last-child {
+      border-bottom: none;
+    }
+
+    .comment-user-info {
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .comment-text {
+      font-size: 14px;
+      margin-top: 4px;
+      color: #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo" id="nav-logo">MangaCouy</div>
+    <div class="user-profile-nav" id="user-nav"></div>
+  </header>
+
+  <div class="container">
+
+    <!-- PAGE 1: KATALOG -->
+    <div id="page-home" class="page active">
+      <h2>Katalog Manga</h2>
+      <div class="manga-grid" id="manga-menu">
+        <p>Memuat komik...</p>
+      </div>
+    </div>
+
+    <!-- PAGE 2: AUTH -->
+    <div id="page-auth" class="page">
+      <div class="auth-box">
+        <div class="auth-tabs">
+          <div class="auth-tab active" id="tab-login-btn">Login</div>
+          <div class="auth-tab" id="tab-register-btn">Register</div>
+        </div>
+
+        <form id="form-login">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="login-email" required placeholder="Email kamu...">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="login-password" required placeholder="Password...">
+          </div>
+          <button type="submit" class="btn-auth" style="width:100%;">Masuk</button>
+        </form>
+
+        <form id="form-register" style="display:none;">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="reg-username" required placeholder="misal: otaku_12">
+          </div>
+          <div class="form-group">
+            <label>Display Name</label>
+            <input type="text" id="reg-displayname" required placeholder="misal: Budi Santoso">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="reg-email" required placeholder="email@contoh.com">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="reg-password" required placeholder="Minimal 6 karakter">
+          </div>
+          <div class="form-group">
+            <label>Foto Profil (Opsional)</label>
+            <input type="file" id="reg-avatar" accept="image/*">
+          </div>
+          <button type="submit" class="btn-auth" style="width:100%;">Daftar Sekarang</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- PAGE 3: BACA MANGA -->
+    <div id="page-reader" class="page">
+      <button class="btn-auth btn-outline" id="btn-back-home" style="margin-bottom:15px;">&larr; Kembali ke Katalog</button>
+      
+      <div class="reader-container">
+        <h2 id="reader-title">Judul Komik</h2>
+        <div id="reader-pages"></div>
+
+        <!-- Section Komentar -->
+        <div class="comments-section">
+          <h3>Komentar</h3>
+          <div id="comments-list"><p style="color:var(--text-dim);">Belum ada komentar.</p></div>
+          
+          <div id="comment-form-box" style="margin-top: 20px;">
+            <textarea id="comment-input" rows="3" placeholder="Tulis komentar kamu..."></textarea>
+            <button class="btn-auth" id="btn-send-comment" style="margin-top:8px;">Kirim Komentar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 4: EDITOR UPLOAD -->
+    <div id="page-upload" class="page">
+      <div class="editor-section">
+        <h2>Upload Komik Baru</h2>
+        
+        <div class="form-group">
+          <label for="title">Judul Manga/Komik</label>
+          <input type="text" id="title" placeholder="Masukkan judul...">
+        </div>
+
+        <div class="form-group">
+          <label for="thumbnail">Upload Thumbnail Cover</label>
+          <input type="file" id="thumbnail" accept="image/*">
+        </div>
+
+        <div class="form-group">
+          <label for="pages">Upload Halaman Manga (Bisa Pilih Banyak)</label>
+          <input type="file" id="pages" accept="image/*" multiple>
+        </div>
+
+        <p style="font-size: 13px; color: var(--text-dim);">* Drag & drop gambar di bawah ini untuk mengatur urutan halaman.</p>
+        
+        <div class="pages-grid" id="pages-preview"></div>
+
+        <button class="btn-auth" id="publish-btn" style="width:100%; margin-top:15px;">Publikasikan Komik</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL EDIT PROFIL -->
+  <div class="modal" id="modal-edit-profile">
+    <div class="modal-content">
+      <h2>Edit Profil</h2>
+      <div class="form-group">
+        <label>Nama Tampilan (Display Name)</label>
+        <input type="text" id="edit-displayname">
+      </div>
+      <div class="form-group">
+        <label>Ganti Foto Profil</label>
+        <input type="file" id="edit-avatar" accept="image/*">
+      </div>
+      <div style="display:flex; gap:10px; margin-top:15px;">
+        <button class="btn-auth" id="btn-save-profile" style="flex:1;">Simpan</button>
+        <button class="btn-auth btn-outline" id="btn-close-profile" style="flex:1;">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword, 
+      signOut, 
+      onAuthStateChanged,
+      updateProfile
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getFirestore, 
+      collection, 
+      addDoc, 
+      getDocs, 
+      doc, 
+      setDoc, 
+      updateDoc,
+      deleteDoc,
+      arrayUnion,
+      arrayRemove,
+      serverTimestamp, 
+      query, 
+      orderBy,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAm4ZBD3OeFyvL4P3S1jxIF5wM0Y-fQrbw",
+      authDomain: "mangacouy-338cd.firebaseapp.com",
+      projectId: "mangacouy-338cd",
+      storageBucket: "mangacouy-338cd.firebasestorage.app",
+      messagingSenderId: "634858950526",
+      appId: "1:634858950526:web:309a019776d235e56a6d2f",
+      measurementId: "G-7DLTW5RZN3"
+    };
+
+    const CLOUDINARY_CLOUD_NAME = "nmcmyhpr";
+    const CLOUDINARY_UPLOAD_PRESET = "hahaha";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+    let pendingReadDoc = null;
+    let currentMangaId = null;
+
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+    }
+
+    document.getElementById('nav-logo').addEventListener('click', () => showPage('page-home'));
+    document.getElementById('btn-back-home').addEventListener('click', () => showPage('page-home'));
+
+    const tabLogin = document.getElementById('tab-login-btn');
+    const tabRegister = document.getElementById('tab-register-btn');
+    const formLogin = document.getElementById('form-login');
+    const formRegister = document.getElementById('form-register');
+
+    tabLogin.addEventListener('click', () => {
+      tabLogin.classList.add('active');
+      tabRegister.classList.remove('active');
+      formLogin.style.display = 'block';
+      formRegister.style.display = 'none';
+    });
+
+    tabRegister.addEventListener('click', () => {
+      tabRegister.classList.add('active');
+      tabLogin.classList.remove('active');
+      formRegister.style.display = 'block';
+      formLogin.style.display = 'none';
+    });
+
+    // Cloudinary Upload
+    async function uploadToCloudinary(file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+        method: "POST",
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error?.message || "Gagal mengunggah ke Cloudinary");
+      }
+
+      const data = await response.json();
+      return data.secure_url;
+    }
+
+    // Register
+    formRegister.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('reg-username').value.trim();
+      const displayName = document.getElementById('reg-displayname').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const password = document.getElementById('reg-password').value;
+      const avatarFile = document.getElementById('reg-avatar').files[0];
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        let photoURL = "https://via.placeholder.com/150/333333/FFFFFF?text=User";
+        if (avatarFile) {
+          photoURL = await uploadToCloudinary(avatarFile);
+        }
+
+        await updateProfile(user, { displayName: displayName, photoURL: photoURL });
+        await setDoc(doc(db, "users", user.uid), {
+          username: username,
+          displayName: displayName,
+          email: email,
+          photoURL: photoURL,
+          createdAt: serverTimestamp()
+        });
+
+        alert("Registrasi Berhasil!");
+        formRegister.reset();
+      } catch (err) {
+        alert("Gagal Register: " + err.message);
+      }
+    });
+
+    // Login
+    formLogin.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("Login Berhasil!");
+        formLogin.reset();
+      } catch (err) {
+        alert("Gagal Login: " + err.message);
+      }
+    });
+
+    // Auth Change Listener
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      const userNav = document.getElementById('user-nav');
+
+      if (user) {
+        userNav.innerHTML = `
+          <img src="${user.photoURL || 'https://via.placeholder.com/150'}" class="avatar-small">
+          <span>${user.displayName || 'User'}</span>
+          <button class="btn-auth btn-outline" id="btn-edit-profile">Edit Profil</button>
+          <button class="btn-auth btn-outline" id="btn-to-upload">Upload Komik</button>
+          <button class="btn-auth btn-outline" id="btn-logout">Logout</button>
+        `;
+
+        document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+        document.getElementById('btn-to-upload').addEventListener('click', () => showPage('page-upload'));
+        document.getElementById('btn-edit-profile').addEventListener('click', openEditProfileModal);
+
+        if (pendingReadDoc) {
+          openReader(pendingReadDoc.id, pendingReadDoc.data);
+          pendingReadDoc = null;
+        } else {
+          showPage('page-home');
+        }
+      } else {
+        userNav.innerHTML = `<button class="btn-auth" id="btn-to-login">Login / Register</button>`;
+        document.getElementById('btn-to-login').addEventListener('click', () => showPage('page-auth'));
+      }
+      loadMangas();
+    });
+
+    // Modal Edit Profil
+    const modalProfile = document.getElementById('modal-edit-profile');
+    function openEditProfileModal() {
+      document.getElementById('edit-displayname').value = currentUser.displayName || '';
+      modalProfile.style.display = 'flex';
+    }
+    document.getElementById('btn-close-profile').addEventListener('click', () => {
+      modalProfile.style.display = 'none';
+    });
+
+    document.getElementById('btn-save-profile').addEventListener('click', async () => {
+      const newName = document.getElementById('edit-displayname').value.trim();
+      const avatarFile = document.getElementById('edit-avatar').files[0];
+      const saveBtn = document.getElementById('btn-save-profile');
+
+      if (!newName) return alert("Nama tidak boleh kosong!");
+
+      try {
+        saveBtn.disabled = true;
+        saveBtn.innerText = "Saving...";
+
+        let photoURL = currentUser.photoURL;
+        if (avatarFile) {
+          photoURL = await uploadToCloudinary(avatarFile);
+        }
+
+        await updateProfile(currentUser, { displayName: newName, photoURL: photoURL });
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          displayName: newName,
+          photoURL: photoURL
+        });
+
+        alert("Profil berhasil diperbarui!");
+        modalProfile.style.display = 'none';
+        location.reload();
+      } catch (err) {
+        alert("Gagal update profil: " + err.message);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerText = "Simpan";
+      }
+    });
+
+    // Realtime Catalog Loading (Dengan Hapus & Like)
+    function loadMangas() {
+      const mangaMenu = document.getElementById('manga-menu');
+      const q = query(collection(db, 'mangas'), orderBy('createdAt', 'desc'));
+
+      onSnapshot(q, (snapshot) => {
+        mangaMenu.innerHTML = '';
+
+        if (snapshot.empty) {
+          mangaMenu.innerHTML = '<p>Belum ada komik yang diunggah.</p>';
+          return;
+        }
+
+        snapshot.forEach((docSnap) => {
+          const id = docSnap.id;
+          const data = docSnap.data();
+          const likes = data.likes || [];
+          const isLiked = currentUser ? likes.includes(currentUser.uid) : false;
+          const isOwner = currentUser && data.uploaderUid === currentUser.uid;
+
+          const card = document.createElement('div');
+          card.classList.add('manga-card');
+          card.innerHTML = `
+            <img class="cover" src="${data.thumbnail}">
+            <div class="info">
+              <div>
+                <h3>${data.title}</h3>
+                <p>${data.pages ? data.pages.length : 0} Halaman</p>
+              </div>
+              
+              <div class="card-footer-actions">
+                <button class="btn-like ${isLiked ? 'liked' : ''}" data-id="${id}">
+                  ❤️ ${likes.length}
+                </button>
+                ${isOwner ? `<button class="btn-danger btn-delete-manga" data-id="${id}">Hapus</button>` : ''}
+              </div>
+
+              <button class="btn-read" style="margin-top:10px;">Baca Sekarang</button>
+            </div>
+          `;
+
+          // Event Baca
+          card.querySelector('.btn-read').addEventListener('click', () => {
+            if (currentUser) {
+              openReader(id, data);
+            } else {
+              alert("Kamu harus Login / Register terlebih dahulu!");
+              pendingReadDoc = { id, data };
+              showPage('page-auth');
+            }
+          });
+
+          // Event Like
+          card.querySelector('.btn-like').addEventListener('click', async () => {
+            if (!currentUser) return alert("Login dulu untuk menyukai komik!");
+            const mangaRef = doc(db, 'mangas', id);
+            if (isLiked) {
+              await updateDoc(mangaRef, { likes: arrayRemove(currentUser.uid) });
+            } else {
+              await updateDoc(mangaRef, { likes: arrayUnion(currentUser.uid) });
+            }
+          });
+
+          // Event Hapus Komik Sendiri
+          if (isOwner) {
+            card.querySelector('.btn-delete-manga').addEventListener('click', async () => {
+              if (confirm(`Apakah kamu yakin ingin menghapus komik "${data.title}"?`)) {
+                await deleteDoc(doc(db, 'mangas', id));
+                alert("Komik berhasil dihapus!");
+              }
+            });
+          }
+
+          mangaMenu.appendChild(card);
+        });
+      });
+    }
+
+    // Open Reader & Load Comments
+    function openReader(mangaId, manga) {
+      currentMangaId = mangaId;
+      document.getElementById('reader-title').innerText = manga.title;
+      const readerContainer = document.getElementById('reader-pages');
+      readerContainer.innerHTML = '';
+
+      manga.pages.forEach(pageUrl => {
+        const img = document.createElement('img');
+        img.src = pageUrl;
+        img.classList.add('reader-img');
+        readerContainer.appendChild(img);
+      });
+
+      loadComments(mangaId);
+      showPage('page-reader');
+    }
+
+    // Load Comments Realtime
+    function loadComments(mangaId) {
+      const commentsList = document.getElementById('comments-list');
+      const q = query(collection(db, 'mangas', mangaId, 'comments'), orderBy('createdAt', 'asc'));
+
+      onSnapshot(q, (snapshot) => {
+        commentsList.innerHTML = '';
+        if (snapshot.empty) {
+          commentsList.innerHTML = '<p style="color:var(--text-dim);">Belum ada komentar.</p>';
+          return;
+        }
+
+        snapshot.forEach((docSnap) => {
+          const c = docSnap.data();
+          const item = document.createElement('div');
+          item.classList.add('comment-item');
+          item.innerHTML = `
+            <img src="${c.photoURL || 'https://via.placeholder.com/150'}" class="avatar-small">
+            <div>
+              <div class="comment-user-info">${c.displayName}</div>
+              <div class="comment-text">${c.text}</div>
+            </div>
+          `;
+          commentsList.appendChild(item);
+        });
+      });
+    }
+
+    // Send Comment
+    document.getElementById('btn-send-comment').addEventListener('click', async () => {
+      const text = document.getElementById('comment-input').value.trim();
+      if (!text) return alert("Komentar tidak boleh kosong!");
+
+      try {
+        await addDoc(collection(db, 'mangas', currentMangaId, 'comments'), {
+          text: text,
+          displayName: currentUser.displayName || 'User',
+          photoURL: currentUser.photoURL || '',
+          userUid: currentUser.uid,
+          createdAt: serverTimestamp()
+        });
+
+        document.getElementById('comment-input').value = '';
+      } catch (err) {
+        alert("Gagal mengirim komentar: " + err.message);
+      }
+    });
+
+    // Drag & Drop Upload
+    let pageFiles = [];
+    let thumbnailFile = null;
+
+    document.getElementById('thumbnail').addEventListener('change', (e) => {
+      thumbnailFile = e.target.files[0] || null;
+    });
+
+    document.getElementById('pages').addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      files.forEach(file => {
+        pageFiles.push({
+          id: Math.random().toString(36).substring(2, 9),
+          file: file,
+          tempUrl: URL.createObjectURL(file)
+        });
+      });
+      renderPages();
+    });
+
+    function renderPages() {
+      const pagesPreview = document.getElementById('pages-preview');
+      pagesPreview.innerHTML = '';
+      pageFiles.forEach((page, index) => {
+        const card = document.createElement('div');
+        card.classList.add('page-card');
+        card.setAttribute('draggable', 'true');
+        card.dataset.index = index;
+
+        card.innerHTML = `
+          <button class="btn-delete" data-index="${index}">&times;</button>
+          <img src="${page.tempUrl}">
+          <div style="font-size:11px; margin-top:4px;">Hal. ${index + 1}</div>
+        `;
+
+        card.querySelector('.btn-delete').addEventListener('click', (e) => {
+          e.stopPropagation();
+          pageFiles.splice(index, 1);
+          renderPages();
+        });
+
+        card.addEventListener('dragstart', function() { this.classList.add('dragging'); });
+        card.addEventListener('dragover', e => e.preventDefault());
+        card.addEventListener('drop', function(e) {
+          e.stopPropagation();
+          const targetIndex = +this.dataset.index;
+          const draggedIndex = document.querySelector('.dragging').dataset.index;
+          if (draggedIndex !== targetIndex) {
+            const movedItem = pageFiles.splice(draggedIndex, 1)[0];
+            pageFiles.splice(targetIndex, 0, movedItem);
+            renderPages();
+          }
+        });
+        card.addEventListener('dragend', function() { this.classList.remove('dragging'); });
+
+        pagesPreview.appendChild(card);
+      });
+    }
+
+    // Publish Manga
+    document.getElementById('publish-btn').addEventListener('click', async () => {
+      const title = document.getElementById('title').value.trim();
+      const publishBtn = document.getElementById('publish-btn');
+
+      if (!title || !thumbnailFile || pageFiles.length === 0) {
+        return alert("Harap lengkapi Judul, Cover, dan Halaman Manga!");
+      }
+
+      try {
+        publishBtn.disabled = true;
+        publishBtn.innerText = "Mengunggah Cover ke Cloudinary...";
+
+        const thumbnailUrl = await uploadToCloudinary(thumbnailFile);
+        const pageUrls = [];
+
+        for (let i = 0; i < pageFiles.length; i++) {
+          publishBtn.innerText = `Mengunggah Hal. ${i + 1}/${pageFiles.length}...`;
+          const url = await uploadToCloudinary(pageFiles[i].file);
+          pageUrls.push(url);
+        }
+
+        publishBtn.innerText = "Menyimpan ke Database...";
+        await addDoc(collection(db, 'mangas'), {
+          title: title,
+          thumbnail: thumbnailUrl,
+          pages: pageUrls,
+          likes: [],
+          uploaderUid: currentUser.uid,
+          createdAt: serverTimestamp()
+        });
+
+        alert("Komik berhasil dipublikasikan!");
+        document.getElementById('title').value = '';
+        document.getElementById('thumbnail').value = '';
+        document.getElementById('pages').value = '';
+        pageFiles = [];
+        thumbnailFile = null;
+        renderPages();
+
+        showPage('page-home');
+
+      } catch (err) {
+        alert("Gagal mengunggah: " + err.message);
+      } finally {
+        publishBtn.disabled = false;
+        publishBtn.innerText = "Publikasikan Komik";
+      }
+    });
+  </script>
+</body>
+</html>
