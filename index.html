@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MangaCouy - Full Featured</title>
+  <title>MangaCouy - Manga & Novel Teks</title>
   <style>
     :root {
       --bg-color: #121212;
@@ -94,17 +94,39 @@
       padding: 0 20px;
     }
 
-    h2 {
-      border-bottom: 2px solid var(--accent);
-      padding-bottom: 8px;
-    }
-
     .page {
       display: none;
     }
 
     .page.active {
       display: block;
+    }
+
+    /* Category Nav Tabs */
+    .main-nav-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 10px;
+    }
+
+    .nav-tab-btn {
+      background: #2a2a2a;
+      border: none;
+      color: var(--text-dim);
+      padding: 10px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-tab-btn.active {
+      background: var(--accent);
+      color: white;
     }
 
     .auth-box {
@@ -217,7 +239,6 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       display: flex;
       flex-direction: column;
-      position: relative;
     }
 
     .manga-card img.cover {
@@ -282,6 +303,17 @@
       border-radius: 4px;
     }
 
+    .text-content-body {
+      text-align: left;
+      line-height: 1.8;
+      font-size: 16px;
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      color: #ddd;
+    }
+
     /* Modal Styling */
     .modal {
       display: none;
@@ -342,12 +374,31 @@
 
   <div class="container">
 
-    <!-- PAGE 1: KATALOG -->
+    <!-- PAGE 1: KATALOG (MANGA & CERITA TEKS) -->
     <div id="page-home" class="page active">
-      <h2>Katalog Manga</h2>
-      <div class="manga-grid" id="manga-menu">
-        <p>Memuat komik...</p>
+      
+      <!-- MENU TAB GESER / SWITCH -->
+      <div class="main-nav-tabs">
+        <button class="nav-tab-btn active" id="tab-menu-manga">📖 Menu Manga</button>
+        <button class="nav-tab-btn" id="tab-menu-text">📝 Cerita Teks</button>
       </div>
+
+      <!-- KATALOG MANGA -->
+      <div id="section-manga-catalog">
+        <h2>Katalog Manga</h2>
+        <div class="manga-grid" id="manga-menu">
+          <p>Memuat komik...</p>
+        </div>
+      </div>
+
+      <!-- KATALOG CERITA TEKS -->
+      <div id="section-text-catalog" style="display: none;">
+        <h2>Katalog Cerita Teks / Novel</h2>
+        <div class="manga-grid" id="text-story-menu">
+          <p>Memuat cerita teks...</p>
+        </div>
+      </div>
+
     </div>
 
     <!-- PAGE 2: AUTH -->
@@ -396,13 +447,18 @@
       </div>
     </div>
 
-    <!-- PAGE 3: BACA MANGA -->
+    <!-- PAGE 3: READER (BACA MANGA / BACA TEKS) -->
     <div id="page-reader" class="page">
       <button class="btn-auth btn-outline" id="btn-back-home" style="margin-bottom:15px;">&larr; Kembali ke Katalog</button>
       
       <div class="reader-container">
-        <h2 id="reader-title">Judul Komik</h2>
+        <h2 id="reader-title">Judul</h2>
+        
+        <!-- Wadah Baca Gambar Manga -->
         <div id="reader-pages"></div>
+
+        <!-- Wadah Baca Teks Novel -->
+        <div id="reader-text-body" class="text-content-body" style="display: none;"></div>
 
         <!-- Section Komentar -->
         <div class="comments-section">
@@ -417,13 +473,13 @@
       </div>
     </div>
 
-    <!-- PAGE 4: EDITOR UPLOAD -->
+    <!-- PAGE 4: EDITOR UPLOAD (ADAPTIF) -->
     <div id="page-upload" class="page">
       <div class="editor-section">
-        <h2>Upload Komik Baru</h2>
+        <h2 id="upload-form-title">Upload Komik Baru</h2>
         
         <div class="form-group">
-          <label for="title">Judul Manga/Komik</label>
+          <label for="title">Judul Content</label>
           <input type="text" id="title" placeholder="Masukkan judul...">
         </div>
 
@@ -432,16 +488,25 @@
           <input type="file" id="thumbnail" accept="image/*">
         </div>
 
-        <div class="form-group">
-          <label for="pages">Upload Halaman Manga (Bisa Pilih Banyak)</label>
-          <input type="file" id="pages" accept="image/*" multiple>
+        <!-- FORM KHUSUS MANGA -->
+        <div id="upload-manga-fields">
+          <div class="form-group">
+            <label for="pages">Upload Halaman Manga (Bisa Pilih Banyak)</label>
+            <input type="file" id="pages" accept="image/*" multiple>
+          </div>
+          <p style="font-size: 13px; color: var(--text-dim);">* Drag & drop gambar di bawah ini untuk mengatur urutan halaman.</p>
+          <div class="pages-grid" id="pages-preview"></div>
         </div>
 
-        <p style="font-size: 13px; color: var(--text-dim);">* Drag & drop gambar di bawah ini untuk mengatur urutan halaman.</p>
-        
-        <div class="pages-grid" id="pages-preview"></div>
+        <!-- FORM KHUSUS CERITA TEKS -->
+        <div id="upload-text-fields" style="display: none;">
+          <div class="form-group">
+            <label for="story-text">Teks Cerita / Novel</label>
+            <textarea id="story-text" rows="12" placeholder="Tulis atau tempel isi cerita kamu di sini..."></textarea>
+          </div>
+        </div>
 
-        <button class="btn-auth" id="publish-btn" style="width:100%; margin-top:15px;">Publikasikan Komik</button>
+        <button class="btn-auth" id="publish-btn" style="width:100%; margin-top:15px;">Publikasikan</button>
       </div>
     </div>
 
@@ -480,7 +545,6 @@
       getFirestore, 
       collection, 
       addDoc, 
-      getDocs, 
       doc, 
       setDoc, 
       updateDoc,
@@ -514,11 +578,34 @@
     let currentUser = null;
     let pendingReadDoc = null;
     let currentMangaId = null;
+    let activeTab = 'manga'; // 'manga' atau 'text'
 
     function showPage(pageId) {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById(pageId).classList.add('active');
     }
+
+    // Switcher Tab Utama (Menu Manga vs Cerita Teks)
+    const btnMangaTab = document.getElementById('tab-menu-manga');
+    const btnTextTab = document.getElementById('tab-menu-text');
+    const sectionManga = document.getElementById('section-manga-catalog');
+    const sectionText = document.getElementById('section-text-catalog');
+
+    btnMangaTab.addEventListener('click', () => {
+      activeTab = 'manga';
+      btnMangaTab.classList.add('active');
+      btnTextTab.classList.remove('active');
+      sectionManga.style.display = 'block';
+      sectionText.style.display = 'none';
+    });
+
+    btnTextTab.addEventListener('click', () => {
+      activeTab = 'text';
+      btnTextTab.classList.add('active');
+      btnMangaTab.classList.remove('active');
+      sectionText.style.display = 'block';
+      sectionManga.style.display = 'none';
+    });
 
     document.getElementById('nav-logo').addEventListener('click', () => showPage('page-home'));
     document.getElementById('btn-back-home').addEventListener('click', () => showPage('page-home'));
@@ -555,14 +642,14 @@
 
       if (!response.ok) {
         const errData = await response.json();
-        throw new Error(errData.error?.message || "Gagal mengunggah ke Cloudinary");
+        throw new Error(errData.error?.message || "Gagal mengunggah gambar");
       }
 
       const data = await response.json();
       return data.secure_url;
     }
 
-    // Register
+    // Auth Listeners & Profile Actions
     formRegister.addEventListener('submit', async (e) => {
       e.preventDefault();
       const username = document.getElementById('reg-username').value.trim();
@@ -596,7 +683,6 @@
       }
     });
 
-    // Login
     formLogin.addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('login-email').value.trim();
@@ -611,7 +697,6 @@
       }
     });
 
-    // Auth Change Listener
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       const userNav = document.getElementById('user-nav');
@@ -621,12 +706,12 @@
           <img src="${user.photoURL || 'https://via.placeholder.com/150'}" class="avatar-small">
           <span>${user.displayName || 'User'}</span>
           <button class="btn-auth btn-outline" id="btn-edit-profile">Edit Profil</button>
-          <button class="btn-auth btn-outline" id="btn-to-upload">Upload Komik</button>
+          <button class="btn-auth btn-outline" id="btn-to-upload">Upload Karya</button>
           <button class="btn-auth btn-outline" id="btn-logout">Logout</button>
         `;
 
         document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
-        document.getElementById('btn-to-upload').addEventListener('click', () => showPage('page-upload'));
+        document.getElementById('btn-to-upload').addEventListener('click', prepareUploadPage);
         document.getElementById('btn-edit-profile').addEventListener('click', openEditProfileModal);
 
         if (pendingReadDoc) {
@@ -640,17 +725,34 @@
         document.getElementById('btn-to-login').addEventListener('click', () => showPage('page-auth'));
       }
       loadMangas();
+      loadTextStories();
     });
 
-    // Modal Edit Profil
+    // Adjust upload form fields based on active mode
+    function prepareUploadPage() {
+      const formTitle = document.getElementById('upload-form-title');
+      const mangaFields = document.getElementById('upload-manga-fields');
+      const textFields = document.getElementById('upload-text-fields');
+
+      if (activeTab === 'manga') {
+        formTitle.innerText = "Upload Komik Manga";
+        mangaFields.style.display = 'block';
+        textFields.style.display = 'none';
+      } else {
+        formTitle.innerText = "Upload Cerita Teks / Novel";
+        mangaFields.style.display = 'none';
+        textFields.style.display = 'block';
+      }
+      showPage('page-upload');
+    }
+
+    // Modal Edit Profile
     const modalProfile = document.getElementById('modal-edit-profile');
     function openEditProfileModal() {
       document.getElementById('edit-displayname').value = currentUser.displayName || '';
       modalProfile.style.display = 'flex';
     }
-    document.getElementById('btn-close-profile').addEventListener('click', () => {
-      modalProfile.style.display = 'none';
-    });
+    document.getElementById('btn-close-profile').addEventListener('click', () => modalProfile.style.display = 'none');
 
     document.getElementById('btn-save-profile').addEventListener('click', async () => {
       const newName = document.getElementById('edit-displayname').value.trim();
@@ -669,10 +771,7 @@
         }
 
         await updateProfile(currentUser, { displayName: newName, photoURL: photoURL });
-        await updateDoc(doc(db, "users", currentUser.uid), {
-          displayName: newName,
-          photoURL: photoURL
-        });
+        await updateDoc(doc(db, "users", currentUser.uid), { displayName: newName, photoURL: photoURL });
 
         alert("Profil berhasil diperbarui!");
         modalProfile.style.display = 'none';
@@ -685,106 +784,127 @@
       }
     });
 
-    // Realtime Catalog Loading (Dengan Hapus & Like)
+    // Realtime Catalog - Manga
     function loadMangas() {
       const mangaMenu = document.getElementById('manga-menu');
       const q = query(collection(db, 'mangas'), orderBy('createdAt', 'desc'));
 
       onSnapshot(q, (snapshot) => {
         mangaMenu.innerHTML = '';
+        if (snapshot.empty) return mangaMenu.innerHTML = '<p>Belum ada komik.</p>';
 
-        if (snapshot.empty) {
-          mangaMenu.innerHTML = '<p>Belum ada komik yang diunggah.</p>';
-          return;
-        }
-
-        snapshot.forEach((docSnap) => {
-          const id = docSnap.id;
-          const data = docSnap.data();
-          const likes = data.likes || [];
-          const isLiked = currentUser ? likes.includes(currentUser.uid) : false;
-          const isOwner = currentUser && data.uploaderUid === currentUser.uid;
-
-          const card = document.createElement('div');
-          card.classList.add('manga-card');
-          card.innerHTML = `
-            <img class="cover" src="${data.thumbnail}">
-            <div class="info">
-              <div>
-                <h3>${data.title}</h3>
-                <p>${data.pages ? data.pages.length : 0} Halaman</p>
-              </div>
-              
-              <div class="card-footer-actions">
-                <button class="btn-like ${isLiked ? 'liked' : ''}" data-id="${id}">
-                  ❤️ ${likes.length}
-                </button>
-                ${isOwner ? `<button class="btn-danger btn-delete-manga" data-id="${id}">Hapus</button>` : ''}
-              </div>
-
-              <button class="btn-read" style="margin-top:10px;">Baca Sekarang</button>
-            </div>
-          `;
-
-          // Event Baca
-          card.querySelector('.btn-read').addEventListener('click', () => {
-            if (currentUser) {
-              openReader(id, data);
-            } else {
-              alert("Kamu harus Login / Register terlebih dahulu!");
-              pendingReadDoc = { id, data };
-              showPage('page-auth');
-            }
-          });
-
-          // Event Like
-          card.querySelector('.btn-like').addEventListener('click', async () => {
-            if (!currentUser) return alert("Login dulu untuk menyukai komik!");
-            const mangaRef = doc(db, 'mangas', id);
-            if (isLiked) {
-              await updateDoc(mangaRef, { likes: arrayRemove(currentUser.uid) });
-            } else {
-              await updateDoc(mangaRef, { likes: arrayUnion(currentUser.uid) });
-            }
-          });
-
-          // Event Hapus Komik Sendiri
-          if (isOwner) {
-            card.querySelector('.btn-delete-manga').addEventListener('click', async () => {
-              if (confirm(`Apakah kamu yakin ingin menghapus komik "${data.title}"?`)) {
-                await deleteDoc(doc(db, 'mangas', id));
-                alert("Komik berhasil dihapus!");
-              }
-            });
-          }
-
-          mangaMenu.appendChild(card);
-        });
+        snapshot.forEach((docSnap) => renderCard(docSnap, mangaMenu, 'mangas'));
       });
     }
 
-    // Open Reader & Load Comments
-    function openReader(mangaId, manga) {
-      currentMangaId = mangaId;
-      document.getElementById('reader-title').innerText = manga.title;
-      const readerContainer = document.getElementById('reader-pages');
-      readerContainer.innerHTML = '';
+    // Realtime Catalog - Cerita Teks
+    function loadTextStories() {
+      const textMenu = document.getElementById('text-story-menu');
+      const q = query(collection(db, 'text_stories'), orderBy('createdAt', 'desc'));
 
-      manga.pages.forEach(pageUrl => {
-        const img = document.createElement('img');
-        img.src = pageUrl;
-        img.classList.add('reader-img');
-        readerContainer.appendChild(img);
+      onSnapshot(q, (snapshot) => {
+        textMenu.innerHTML = '';
+        if (snapshot.empty) return textMenu.innerHTML = '<p>Belum ada cerita teks.</p>';
+
+        snapshot.forEach((docSnap) => renderCard(docSnap, textMenu, 'text_stories'));
+      });
+    }
+
+    // Card Renderer Generic
+    function renderCard(docSnap, container, collectionName) {
+      const id = docSnap.id;
+      const data = docSnap.data();
+      const likes = data.likes || [];
+      const isLiked = currentUser ? likes.includes(currentUser.uid) : false;
+      const isOwner = currentUser && data.uploaderUid === currentUser.uid;
+
+      const card = document.createElement('div');
+      card.classList.add('manga-card');
+      card.innerHTML = `
+        <img class="cover" src="${data.thumbnail}">
+        <div class="info">
+          <div>
+            <h3>${data.title}</h3>
+            <p>${collectionName === 'mangas' ? (data.pages ? data.pages.length + ' Halaman' : 'Manga') : 'Cerita Teks'}</p>
+          </div>
+          
+          <div class="card-footer-actions">
+            <button class="btn-like ${isLiked ? 'liked' : ''}">❤️ ${likes.length}</button>
+            ${isOwner ? `<button class="btn-danger btn-delete-item">Hapus</button>` : ''}
+          </div>
+
+          <button class="btn-read" style="margin-top:10px;">Baca Sekarang</button>
+        </div>
+      `;
+
+      card.querySelector('.btn-read').addEventListener('click', () => {
+        if (currentUser) {
+          openReader(id, data, collectionName);
+        } else {
+          alert("Kamu harus Login terlebih dahulu!");
+          pendingReadDoc = { id, data };
+          showPage('page-auth');
+        }
       });
 
-      loadComments(mangaId);
+      card.querySelector('.btn-like').addEventListener('click', async () => {
+        if (!currentUser) return alert("Login dulu untuk menyukai!");
+        const itemRef = doc(db, collectionName, id);
+        await updateDoc(itemRef, {
+          likes: isLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+        });
+      });
+
+      if (isOwner) {
+        card.querySelector('.btn-delete-item').addEventListener('click', async () => {
+          if (confirm(`Hapus "${data.title}"?`)) {
+            await deleteDoc(doc(db, collectionName, id));
+            alert("Berhasil dihapus!");
+          }
+        });
+      }
+
+      container.appendChild(card);
+    }
+
+    // Reader Manager
+    function openReader(mangaId, itemData, collectionName = (activeTab === 'manga' ? 'mangas' : 'text_stories')) {
+      currentMangaId = mangaId;
+      document.getElementById('reader-title').innerText = itemData.title;
+      
+      const readerPages = document.getElementById('reader-pages');
+      const readerText = document.getElementById('reader-text-body');
+
+      readerPages.innerHTML = '';
+      readerText.innerHTML = '';
+
+      if (itemData.pages) {
+        // Tampilkan Format Manga Gambar
+        readerPages.style.display = 'block';
+        readerText.style.display = 'none';
+        itemData.pages.forEach(pageUrl => {
+          const img = document.createElement('img');
+          img.src = pageUrl;
+          img.classList.add('reader-img');
+          readerPages.appendChild(img);
+        });
+      } else {
+        // Tampilkan Format Teks Novel
+        readerPages.style.display = 'none';
+        readerText.style.display = 'block';
+        readerText.innerText = itemData.storyText;
+      }
+
+      loadComments(mangaId, collectionName);
       showPage('page-reader');
     }
 
-    // Load Comments Realtime
-    function loadComments(mangaId) {
+    // Comments Loader & Handler
+    let activeCollectionForComments = 'mangas';
+    function loadComments(mangaId, collectionName) {
+      activeCollectionForComments = collectionName;
       const commentsList = document.getElementById('comments-list');
-      const q = query(collection(db, 'mangas', mangaId, 'comments'), orderBy('createdAt', 'asc'));
+      const q = query(collection(db, collectionName, mangaId, 'comments'), orderBy('createdAt', 'asc'));
 
       onSnapshot(q, (snapshot) => {
         commentsList.innerHTML = '';
@@ -809,37 +929,32 @@
       });
     }
 
-    // Send Comment
     document.getElementById('btn-send-comment').addEventListener('click', async () => {
       const text = document.getElementById('comment-input').value.trim();
       if (!text) return alert("Komentar tidak boleh kosong!");
 
       try {
-        await addDoc(collection(db, 'mangas', currentMangaId, 'comments'), {
+        await addDoc(collection(db, activeCollectionForComments, currentMangaId, 'comments'), {
           text: text,
           displayName: currentUser.displayName || 'User',
           photoURL: currentUser.photoURL || '',
           userUid: currentUser.uid,
           createdAt: serverTimestamp()
         });
-
         document.getElementById('comment-input').value = '';
       } catch (err) {
         alert("Gagal mengirim komentar: " + err.message);
       }
     });
 
-    // Drag & Drop Upload
+    // Multi-page Image Reordering for Manga
     let pageFiles = [];
     let thumbnailFile = null;
 
-    document.getElementById('thumbnail').addEventListener('change', (e) => {
-      thumbnailFile = e.target.files[0] || null;
-    });
+    document.getElementById('thumbnail').addEventListener('change', (e) => thumbnailFile = e.target.files[0] || null);
 
     document.getElementById('pages').addEventListener('change', (e) => {
-      const files = Array.from(e.target.files);
-      files.forEach(file => {
+      Array.from(e.target.files).forEach(file => {
         pageFiles.push({
           id: Math.random().toString(36).substring(2, 9),
           file: file,
@@ -857,7 +972,6 @@
         card.classList.add('page-card');
         card.setAttribute('draggable', 'true');
         card.dataset.index = index;
-
         card.innerHTML = `
           <button class="btn-delete" data-index="${index}">&times;</button>
           <img src="${page.tempUrl}">
@@ -888,42 +1002,58 @@
       });
     }
 
-    // Publish Manga
+    // Universal Publish Logic
     document.getElementById('publish-btn').addEventListener('click', async () => {
       const title = document.getElementById('title').value.trim();
       const publishBtn = document.getElementById('publish-btn');
 
-      if (!title || !thumbnailFile || pageFiles.length === 0) {
-        return alert("Harap lengkapi Judul, Cover, dan Halaman Manga!");
-      }
+      if (!title || !thumbnailFile) return alert("Judul dan Cover Thumbnail wajib diisi!");
 
       try {
         publishBtn.disabled = true;
-        publishBtn.innerText = "Mengunggah Cover ke Cloudinary...";
+        publishBtn.innerText = "Mengunggah Cover...";
 
         const thumbnailUrl = await uploadToCloudinary(thumbnailFile);
-        const pageUrls = [];
 
-        for (let i = 0; i < pageFiles.length; i++) {
-          publishBtn.innerText = `Mengunggah Hal. ${i + 1}/${pageFiles.length}...`;
-          const url = await uploadToCloudinary(pageFiles[i].file);
-          pageUrls.push(url);
+        if (activeTab === 'manga') {
+          // Process Manga Upload
+          if (pageFiles.length === 0) return alert("Halaman manga belum dipilih!");
+          const pageUrls = [];
+          for (let i = 0; i < pageFiles.length; i++) {
+            publishBtn.innerText = `Mengunggah Hal. ${i + 1}/${pageFiles.length}...`;
+            const url = await uploadToCloudinary(pageFiles[i].file);
+            pageUrls.push(url);
+          }
+
+          await addDoc(collection(db, 'mangas'), {
+            title: title,
+            thumbnail: thumbnailUrl,
+            pages: pageUrls,
+            likes: [],
+            uploaderUid: currentUser.uid,
+            createdAt: serverTimestamp()
+          });
+
+        } else {
+          // Process Text Story Upload
+          const storyText = document.getElementById('story-text').value.trim();
+          if (!storyText) return alert("Teks cerita tidak boleh kosong!");
+
+          await addDoc(collection(db, 'text_stories'), {
+            title: title,
+            thumbnail: thumbnailUrl,
+            storyText: storyText,
+            likes: [],
+            uploaderUid: currentUser.uid,
+            createdAt: serverTimestamp()
+          });
         }
 
-        publishBtn.innerText = "Menyimpan ke Database...";
-        await addDoc(collection(db, 'mangas'), {
-          title: title,
-          thumbnail: thumbnailUrl,
-          pages: pageUrls,
-          likes: [],
-          uploaderUid: currentUser.uid,
-          createdAt: serverTimestamp()
-        });
-
-        alert("Komik berhasil dipublikasikan!");
+        alert("Berhasil dipublikasikan!");
         document.getElementById('title').value = '';
         document.getElementById('thumbnail').value = '';
         document.getElementById('pages').value = '';
+        document.getElementById('story-text').value = '';
         pageFiles = [];
         thumbnailFile = null;
         renderPages();
@@ -934,7 +1064,7 @@
         alert("Gagal mengunggah: " + err.message);
       } finally {
         publishBtn.disabled = false;
-        publishBtn.innerText = "Publikasikan Komik";
+        publishBtn.innerText = "Publikasikan";
       }
     });
   </script>
